@@ -1,6 +1,6 @@
 package com.coder.demosisfo.model.dto;
 
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,13 +9,9 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ListCourseDto {
-	private Set<String> roles;
-	private String namaFakultas;
-	private String namaJurusan;
-	private String namaMatakuliah;
+public class ListCourse {
+	private String ips;
 	private Integer semester;
-	private Integer sks;
-	private Integer kuota;
+	private List<GetCourse> listCourse;
 
 }

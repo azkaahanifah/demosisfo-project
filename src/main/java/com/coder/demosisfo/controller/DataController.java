@@ -1,5 +1,7 @@
 package com.coder.demosisfo.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coder.demosisfo.exception.BadRequestException;
 import com.coder.demosisfo.model.dto.FacultyDto;
+import com.coder.demosisfo.model.dto.GetCourseReq;
+import com.coder.demosisfo.model.dto.GetCourseResp;
 import com.coder.demosisfo.model.dto.ListCourseDto;
 import com.coder.demosisfo.model.dto.MajorDto;
 import com.coder.demosisfo.service.DataService;
@@ -57,6 +62,13 @@ public class DataController {
 		LOGGER.info("Fetching data: {}", listCourseDto);
 		String updateCourse = dataService.updateCourses(id, listCourseDto);
 		return new ResponseEntity<>(updateCourse, HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/getListCourse")
+	public ResponseEntity<?> getListCourse(@Valid @RequestBody GetCourseReq request) throws BadRequestException{
+		LOGGER.info("Fetching data: {}", request);
+		List<GetCourseResp> getListCourseBySmt = dataService.getListCourseBySmt(request);
+		return new ResponseEntity<>(getListCourseBySmt, HttpStatus.OK);
 	}
 
 }

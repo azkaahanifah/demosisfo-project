@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coder.demosisfo.exception.BadRequestException;
+import com.coder.demosisfo.model.Student;
 import com.coder.demosisfo.model.dto.AddStudentRequest;
 import com.coder.demosisfo.service.StudentService;
 
@@ -25,8 +26,8 @@ public class StudentController {
 	
 	@PostMapping("/addatastudent")
 	public ResponseEntity<?> addDataStudent(@Valid @RequestBody AddStudentRequest addStudentRequest) throws BadRequestException{
-		studentService.addDataStudent(addStudentRequest);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		Student student = studentService.addDataStudent(addStudentRequest);
+		return new ResponseEntity<>(student, HttpStatus.CREATED);
 	}
-
+	
 }

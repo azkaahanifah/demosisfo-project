@@ -66,10 +66,4 @@ public class Student {
 		
 	}
 	
-	public Student(Long id, Integer noBp, String fullname, String password) {
-		this.id = id;
-		this.noBp = noBp;
-		this.namaMhs = fullname;
-		this.password = password;
-	}
 }

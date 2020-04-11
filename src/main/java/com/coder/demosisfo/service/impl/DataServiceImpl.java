@@ -1,5 +1,6 @@
 package com.coder.demosisfo.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,8 @@ import com.coder.demosisfo.model.EData;
 import com.coder.demosisfo.model.Faculty;
 import com.coder.demosisfo.model.Major;
 import com.coder.demosisfo.model.dto.FacultyDto;
+import com.coder.demosisfo.model.dto.GetCourseReq;
+import com.coder.demosisfo.model.dto.GetCourseResp;
 import com.coder.demosisfo.model.dto.ListCourseDto;
 import com.coder.demosisfo.model.dto.MajorDto;
 import com.coder.demosisfo.repository.CourseRepository;
@@ -90,12 +93,13 @@ public class DataServiceImpl implements DataService{
 		
 		LOGGER.info("Check nama fakultas to major table: {}", listCourseDto.getNamaFakultas());
 		List<Major> getListOfMajor = studentService.getListMajor(listCourseDto.getNamaFakultas());
-		LOGGER.info("Get one row data from major table  by nama fakultas");
+		LOGGER.info("Get one row data from major table by nama fakultas");
 		Major getMajor = this.getOneRowOfMajor(getListOfMajor, listCourseDto.getNamaJurusan());
 		
 		Courses courses = new Courses(listCourseDto.getNamaMatakuliah(), 
 									  listCourseDto.getSemester(),
 									  listCourseDto.getSks(),
+									  listCourseDto.getKuota(),
 									  getMajor.getNamaFakultas(),
 									  getMajor.getNamaJurusan(),
 									  dataRoles);
@@ -105,6 +109,7 @@ public class DataServiceImpl implements DataService{
 		return "Data is success to submitted";
 	}
 	
+	@Override
 	public Major getOneRowOfMajor(List<Major> listOfMajor, String namaJurusan) throws BadRequestException{
 		for(Major getMajor : listOfMajor) {
 			String _namaJurusan = getMajor.getNamaJurusan();
@@ -156,6 +161,7 @@ public class DataServiceImpl implements DataService{
 			_courses.setNamaMatakuliah(listCourseDto.getNamaMatakuliah());
 			_courses.setSemester(listCourseDto.getSemester());
 			_courses.setSks(listCourseDto.getSks());
+			_courses.setKuota(listCourseDto.getKuota());
 			_courses.setNamaFakultas(listCourseDto.getNamaFakultas());
 			_courses.setNamaJurusan(listCourseDto.getNamaJurusan());
 			courseRepository.save(_courses);
@@ -165,6 +171,48 @@ public class DataServiceImpl implements DataService{
 		LOGGER.error("Failed to update courses with id: {}", id);
 		throw new BadRequestException("Failed to update courses!");
 		
+	}
+
+	@Override
+	public List<GetCourseResp> getListCourseBySmt(GetCourseReq getCourse) throws BadRequestException {
+		List<Courses> getListCourse = this.getListCourse(getCourse.getNamaFakultas(), getCourse.getNamaJurusan());
+		List<GetCourseResp> getCourseBySmt = this.getCourseBySmt(getListCourse, getCourse.getSemester());
+		return getCourseBySmt;
+	}
+
+	@Override
+	public List<Courses> getListCourse(String namaFakultas, String namaJurusan) throws BadRequestException {
+		List<Courses> listOfCourse = courseRepository.findByNamaFakultasAndNamaJurusan(namaFakultas, namaJurusan);
+		if (!listOfCourse.isEmpty()) {
+			return listOfCourse;
+		}
+		LOGGER.error("Cannot find list of Course");
+		throw new BadRequestException("Cannot find list of Course");
+	}
+
+	@Override
+	public List<GetCourseResp> getCourseBySmt(List<Courses> getListCourse, Integer semester) {
+		List<GetCourseResp> _getCourseBySmt = new ArrayList<>();
+		GetCourseResp getResp = new GetCourseResp();
+		
+		for (Courses _courses : getListCourse) {
+			getResp = new GetCourseResp();
+			if ((semester % 2) == 0 && (_courses.getSemester()) == 0) {
+				getResp.setMatakuliahId(_courses.getMatakuliahId());
+				getResp.setNamaMatakuliah(_courses.getNamaMatakuliah());
+				getResp.setSemester(_courses.getSemester());
+				getResp.setSks(_courses.getSks());
+				getResp.setKuota(_courses.getKuota());
+			} else if ((semester % 2) == 1 && (_courses.getSemester()) == 1) {
+				getResp.setMatakuliahId(_courses.getMatakuliahId());
+				getResp.setNamaMatakuliah(_courses.getNamaMatakuliah());
+				getResp.setSemester(_courses.getSemester());
+				getResp.setSks(_courses.getSks());
+				getResp.setKuota(_courses.getKuota());
+			}
+			_getCourseBySmt.add(getResp);
+		}
+		return _getCourseBySmt;
 	}
 
 }

@@ -25,7 +25,7 @@ public class Faculty {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
+	@Column(name = "id")
 	private Integer fakultasId;
 	
 	@NotBlank

@@ -7,8 +7,10 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AddStudentResponse {
-	private Integer nomorBp;
-	private String password;
+public class GetCourse {
+	private String namaMatakuliah;
+	private Integer sks;
+	private String nilai;
+	private String grade;
 
 }

@@ -39,6 +39,9 @@ public class Courses {
 	@Column(name = "sks")
 	private Integer sks;
 	
+	@Column(name = "kuota")
+	private Integer kuota;
+	
 	@Column(name = "nama_fakultas")
 	private String namaFakultas;
 	
@@ -55,12 +58,13 @@ public class Courses {
 		
 	}
 
-	public Courses(@NotBlank @Size(max = 50) String namaMatakuliah, Integer semester, Integer sks, String namaFakultas,
+	public Courses(@NotBlank @Size(max = 50) String namaMatakuliah, Integer semester, Integer sks, Integer kuota, String namaFakultas,
 			String namaJurusan, Set<DataRole> data) {
 		super();
 		this.namaMatakuliah = namaMatakuliah;
 		this.semester = semester;
 		this.sks = sks;
+		this.kuota = kuota;
 		this.namaFakultas = namaFakultas;
 		this.namaJurusan = namaJurusan;
 		this.data = data;
