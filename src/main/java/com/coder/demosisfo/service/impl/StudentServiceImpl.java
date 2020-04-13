@@ -13,11 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coder.demosisfo.exception.BadRequestException;
+import com.coder.demosisfo.model.Courses;
 import com.coder.demosisfo.model.Faculty;
 import com.coder.demosisfo.model.Major;
 import com.coder.demosisfo.model.Student;
 import com.coder.demosisfo.model.dto.AddStudentRequest;
+import com.coder.demosisfo.model.dto.GetCourse;
+import com.coder.demosisfo.model.dto.ListCourse;
 import com.coder.demosisfo.model.dto.UpdateDataStudentRequest;
+import com.coder.demosisfo.model.dto.UpdateDataStudentResponse;
 import com.coder.demosisfo.repository.CourseRepository;
 import com.coder.demosisfo.repository.FacultyRepository;
 import com.coder.demosisfo.repository.MajorRepository;
@@ -25,6 +29,7 @@ import com.coder.demosisfo.repository.StudentRepository;
 import com.coder.demosisfo.service.DataService;
 import com.coder.demosisfo.service.StudentService;
 import com.coder.demosisfo.util.CodeGenerator;
+import com.coder.demosisfo.util.ConverterUtil;
 import com.coder.demosisfo.util.RegexUtil;
 
 @Service("studentService")
@@ -52,6 +57,9 @@ public class StudentServiceImpl implements StudentService {
 
 	@Autowired
 	RegexUtil regexUtil;
+	
+	@Autowired
+	ConverterUtil util;
 	
 	@Autowired
 	EntityManager em;
@@ -160,8 +168,39 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public Student updateDataStudent(UpdateDataStudentRequest updateStudentRequest) throws BadRequestException {
-		return null;
+	public UpdateDataStudentResponse updateDataStudent(Long id, UpdateDataStudentRequest request) throws BadRequestException {
+		List<ListCourse> _listCourse = request.getCourses();
+		List<GetCourse> _getCourse = _listCourse.get(0).getListCourse();
+		
+		Optional<Student> getStudent = studentRepository.findById(id);
+		if (getStudent.isPresent()) {
+			for (GetCourse getCourse : _getCourse) {
+				Optional<Courses> getOneRowOfCourse = courseRepository.findByNamaMatakuliah(getCourse.getNamaMatakuliah());
+				if (getOneRowOfCourse.isPresent()) {
+					Courses course = getOneRowOfCourse.get();
+					Integer kuota = course.getKuota();
+					if (kuota <= 5) {
+						// kuota akan dikurangi 1 dan diupdate ke tabel course
+						kuota--;
+						courseRepository.updateKuota(course.getMatakuliahId(), kuota);
+					} else {
+						throw new BadRequestException("This course is full! Please choose other course");
+					}
+				}
+			}
+		} else {
+			LOGGER.error("Cannot find Student with id: {}", id);
+			throw new BadRequestException("Cannot find Student with id: {}" + id);
+		}
+		
+		// update tabel student dengan save mhslogin byte
+		byte[] content = util.convertDtoByte(_listCourse);
+		studentRepository.updateStudent(id, content);
+		
+		// response yang ditampilkan
+		UpdateDataStudentResponse response = new UpdateDataStudentResponse();
+		response.setCourses(_listCourse);
+		return response;
 	}
 	
 }

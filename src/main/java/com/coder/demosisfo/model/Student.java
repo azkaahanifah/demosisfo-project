@@ -65,5 +65,36 @@ public class Student {
 	public Student() {
 		
 	}
+
+	/**
+	 * @param id
+	 * @param password
+	 * @param noBp
+	 * @param namaMhs
+	 * @param dob
+	 * @param gender
+	 * @param namaFakultas
+	 * @param namaJurusan
+	 * @param semester
+	 * @param listCourse
+	 */
+	public Student(Long id, @NotBlank @Size(max = 20) String password, Integer noBp,
+			@NotBlank @Size(max = 40) String namaMhs, Date dob, String gender,
+			@NotBlank @Size(max = 50) String namaFakultas, @NotBlank @Size(max = 50) String namaJurusan,
+			Integer semester, byte[] listCourse) {
+		super();
+		this.id = id;
+		this.password = password;
+		this.noBp = noBp;
+		this.namaMhs = namaMhs;
+		this.dob = dob;
+		this.gender = gender;
+		this.namaFakultas = namaFakultas;
+		this.namaJurusan = namaJurusan;
+		this.semester = semester;
+		this.listCourse = listCourse;
+	}
+	
+	
 	
 }

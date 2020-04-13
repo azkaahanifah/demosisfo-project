@@ -15,7 +15,7 @@ public class ConverterUtil {
 	public byte[] convertDtoByte(Object object) {
 		byte[] dtoContent = null;
 		try {
-			dtoContent = mapper.writeValueAsBytes(dtoContent);
+			dtoContent = mapper.writeValueAsBytes(object);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Failed when processing json");
 		}

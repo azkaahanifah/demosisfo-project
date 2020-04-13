@@ -8,6 +8,7 @@ import com.coder.demosisfo.model.Major;
 import com.coder.demosisfo.model.Student;
 import com.coder.demosisfo.model.dto.AddStudentRequest;
 import com.coder.demosisfo.model.dto.UpdateDataStudentRequest;
+import com.coder.demosisfo.model.dto.UpdateDataStudentResponse;
 
 public interface StudentService {
 	public Student addDataStudent(AddStudentRequest addStudentRequest) throws BadRequestException;
@@ -16,6 +17,6 @@ public interface StudentService {
 	public Major getJurusan(String namaJurusan) throws BadRequestException;
 	public boolean isNomorBpExist(Integer nomorBp);
 	public boolean isPasswordExist(String password);
-	public Student updateDataStudent(UpdateDataStudentRequest updateStudentRequest) throws BadRequestException;
+	public UpdateDataStudentResponse updateDataStudent(Long id, UpdateDataStudentRequest updateStudentRequest) throws BadRequestException;
 	
 }

@@ -10,8 +10,6 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ListCourse {
-	private String ips;
-	private Integer semester;
 	private List<GetCourse> listCourse;
 
 }

@@ -9,6 +9,7 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class GetCourse {
 	private String namaMatakuliah;
+	private Integer semester;
 	private Integer sks;
 	private String nilai;
 	private String grade;
