@@ -162,27 +162,25 @@ public class StudentServiceImpl implements StudentService {
 		String regexDob = regexUtil.matchesDob();
 		if (!dob.matches(regexDob)) {
 			LOGGER.error("Please insert DOB with yyyy-MM-dd format");
-
 		}
 		return !dob.isEmpty() || dob.matches(regexDob);
 	}
 
 	@Override
 	public UpdateDataStudentResponse updateDataStudent(Long id, UpdateDataStudentRequest request) throws BadRequestException {
-		List<ListCourse> _listCourse = request.getCourses();
-		List<GetCourse> _getCourse = _listCourse.get(0).getListCourse();
+		List<ListCourse> listCourse = request.getCourses();
+		List<GetCourse> getCourse = listCourse.get(0).getListCourse();
 		
 		Optional<Student> getStudent = studentRepository.findById(id);
 		if (getStudent.isPresent()) {
-			for (GetCourse getCourse : _getCourse) {
-				Optional<Courses> getOneRowOfCourse = courseRepository.findByNamaMatakuliah(getCourse.getNamaMatakuliah());
+			for (GetCourse course : getCourse) {
+				Optional<Courses> getOneRowOfCourse = courseRepository.findByNamaMatakuliah(course.getNamaMatakuliah());
 				if (getOneRowOfCourse.isPresent()) {
-					Courses course = getOneRowOfCourse.get();
-					Integer kuota = course.getKuota();
+					Courses courses = getOneRowOfCourse.get();
+					Integer kuota = courses.getKuota();
 					if (kuota <= 5) {
-						// kuota akan dikurangi 1 dan diupdate ke tabel course
 						kuota--;
-						courseRepository.updateKuota(course.getMatakuliahId(), kuota);
+						courseRepository.updateKuota(courses.getMatakuliahId(), kuota);
 					} else {
 						throw new BadRequestException("This course is full! Please choose other course");
 					}
@@ -193,13 +191,12 @@ public class StudentServiceImpl implements StudentService {
 			throw new BadRequestException("Cannot find Student with id: {}" + id);
 		}
 		
-		// update tabel student dengan save mhslogin byte
-		byte[] content = util.convertDtoByte(_listCourse);
+		LOGGER.info("Update student table and save: {}", listCourse);
+		byte[] content = util.convertDtoByte(listCourse);
 		studentRepository.updateStudent(id, content);
 		
-		// response yang ditampilkan
 		UpdateDataStudentResponse response = new UpdateDataStudentResponse();
-		response.setCourses(_listCourse);
+		response.setCourses(listCourse);
 		return response;
 	}
 	

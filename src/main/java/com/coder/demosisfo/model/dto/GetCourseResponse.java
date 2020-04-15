@@ -3,7 +3,7 @@ package com.coder.demosisfo.model.dto;
 import lombok.Data;
 
 @Data
-public class GetCourseResp {
+public class GetCourseResponse {
 	private Integer matakuliahId;
 	private String namaMatakuliah;
 	private Integer semester;

@@ -3,6 +3,8 @@ package com.coder.demosisfo.service.impl;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +27,8 @@ import com.coder.demosisfo.service.AuthService;
 @Service("authService")
 public class AuthServiceImpl implements AuthService{
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
+	
 	@Autowired
 	AuthenticationManager authenticationManager;
 	
@@ -45,7 +49,7 @@ public class AuthServiceImpl implements AuthService{
 
 	@Override
 	public String registerUser(RegisterRequest registerRequest) {
-		/* Create new user account */
+		LOGGER.info("Create new user account");
 		User user = new User(registerRequest.getFullname(),
 							 registerRequest.getUsername(),
 							 passwordEncoder.encode(registerRequest.getPassword()));

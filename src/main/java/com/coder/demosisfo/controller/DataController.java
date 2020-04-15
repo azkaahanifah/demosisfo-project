@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coder.demosisfo.exception.BadRequestException;
 import com.coder.demosisfo.model.dto.FacultyDto;
-import com.coder.demosisfo.model.dto.GetCourseReq;
-import com.coder.demosisfo.model.dto.GetCourseResp;
-import com.coder.demosisfo.model.dto.ListCourseDto;
+import com.coder.demosisfo.model.dto.GetCourseRequest;
+import com.coder.demosisfo.model.dto.GetCourseResponse;
+import com.coder.demosisfo.model.dto.ListCourseResponse;
+import com.coder.demosisfo.model.dto.CourseDto;
 import com.coder.demosisfo.model.dto.MajorDto;
 import com.coder.demosisfo.service.DataService;
 
@@ -31,43 +30,36 @@ import com.coder.demosisfo.service.DataService;
 @RequestMapping("/api")
 public class DataController {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataController.class);
-	
 	@Autowired
 	DataService dataService;
 	
 	@PostMapping("/addFaculty")
-	public ResponseEntity<?> postFaculty(@Valid @RequestBody FacultyDto facultyDto) throws BadRequestException{
-		LOGGER.info("Fetching data: {}", facultyDto);
+	public ResponseEntity<String> postFaculty(@Valid @RequestBody FacultyDto facultyDto) throws BadRequestException{
 		String postData = dataService.postNamaFakultas(facultyDto);
 		return new ResponseEntity<>(postData, HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/addMajor")
-	public ResponseEntity<?> postMajor(@Valid @RequestBody MajorDto majorDto) throws BadRequestException{
-		LOGGER.info("Fetching data: {}", majorDto);
+	public ResponseEntity<String> postMajor(@Valid @RequestBody MajorDto majorDto) throws BadRequestException{
 		String postData = dataService.postNamaJurusan(majorDto);
 		return new ResponseEntity<>(postData, HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/addCourse")
-	public ResponseEntity<?> postCourse(@Valid @RequestBody ListCourseDto listCourseDto) throws BadRequestException{
-		LOGGER.info("Fetching data: {}", listCourseDto);
-		String postData = dataService.postMatakuliah(listCourseDto);
+	public ResponseEntity<ListCourseResponse> postCourse(@Valid @RequestBody CourseDto listCourseDto) throws BadRequestException{
+		ListCourseResponse postData = dataService.postMatakuliah(listCourseDto);
 		return new ResponseEntity<>(postData, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/updateCourse/{id}")
-	public ResponseEntity<?> updateCourse(@PathVariable Integer id, @Valid @RequestBody ListCourseDto listCourseDto) throws BadRequestException{
-		LOGGER.info("Fetching data: {}", listCourseDto);
-		String updateCourse = dataService.updateCourses(id, listCourseDto);
+	public ResponseEntity<ListCourseResponse> updateCourse(@PathVariable Integer id, @Valid @RequestBody CourseDto listCourseDto) throws BadRequestException{
+		ListCourseResponse updateCourse = dataService.updateCourses(id, listCourseDto);
 		return new ResponseEntity<>(updateCourse, HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/getListCourse")
-	public ResponseEntity<?> getListCourse(@Valid @RequestBody GetCourseReq request) throws BadRequestException{
-		LOGGER.info("Fetching data: {}", request);
-		List<GetCourseResp> getListCourseBySmt = dataService.getListCourseBySmt(request);
+	public ResponseEntity<List<GetCourseResponse>> getListCourse(@Valid @RequestBody GetCourseRequest request) throws BadRequestException{
+		List<GetCourseResponse> getListCourseBySmt = dataService.getListCourseBySmt(request);
 		return new ResponseEntity<>(getListCourseBySmt, HttpStatus.OK);
 	}
 
