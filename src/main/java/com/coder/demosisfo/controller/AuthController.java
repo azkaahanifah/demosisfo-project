@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.coder.demosisfo.exception.PasswordFormatException;
 import com.coder.demosisfo.payload.JwtResponse;
 import com.coder.demosisfo.payload.MessageResponse;
 import com.coder.demosisfo.payload.request.LoginRequest;
@@ -29,7 +30,7 @@ public class AuthController {
 	AuthServiceImpl authServiceImpl;
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) throws PasswordFormatException{
 		if (userRepository.existsByUsername(registerRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()

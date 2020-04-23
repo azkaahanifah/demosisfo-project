@@ -14,5 +14,9 @@ public class RegexUtil {
 	public String matchesNumber(String object) {
 		return object.replaceAll("([0-9]+)", "").trim();
 	}
+	
+	public boolean matchesPassword(String object) {
+		return object.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=\\S+$).{8,}$");
+	}
 
 }
